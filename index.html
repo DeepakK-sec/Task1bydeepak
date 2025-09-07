@@ -1,1 +1,115 @@
 
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Product — Static Showcase</title>
+  <meta name="description" content="Static product showcase. Upload your product image to /images/product.jpg and publish with GitHub Pages." />
+  <style>
+    :root{--bg:#0b1020;--card:#0f1724;--muted:#9aa3b2;--accent:#6ee7b7}
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#e6eef6;background:linear-gradient(180deg, #020617 0%, #061226 60%);}
+    .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:32px}
+    .card{width:100%;max-width:920px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);backdrop-filter:blur(6px);border-radius:16px;overflow:hidden;display:grid;grid-template-columns:1fr 420px}
+    @media (max-width:880px){.card{grid-template-columns:1fr;max-width:420px}}
+    .left{padding:28px 32px;display:flex;flex-direction:column;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:48px;height:48px;background:linear-gradient(135deg,#2dd4bf,#60a5fa);border-radius:10px;display:inline-grid;place-items:center;font-weight:700;color:#021124}
+    h1{margin:0;font-size:26px}
+    p.lead{margin:0;color:var(--muted)}
+    .price{font-size:22px;font-weight:700;margin-top:6px}
+    .buyrow{display:flex;gap:12px;align-items:center;margin-top:12px}
+    .btn{padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:600}
+    .btn.primary{background:linear-gradient(90deg,#10b981,#06b6d4);color:#04121a}
+    .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04)}
+    .specs{margin-top:18px;color:var(--muted);font-size:14px;display:flex;gap:16px;flex-wrap:wrap}
+    .spec{background:rgba(255,255,255,0.02);padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.02)}
+    .right{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;align-items:center;justify-content:center;padding:18px}
+    .imgwrap{width:100%;height:100%;max-height:540px;display:grid;place-items:center;position:relative}
+    img.product{max-width:100%;max-height:100%;display:block;border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.6);opacity:0;transform:translateY(8px) scale(0.998);transition:opacity .45s ease,transform .45s cubic-bezier(.2,.9,.2,1)}
+    img.product.loaded{opacity:1;transform:none}
+    .spinner{position:absolute;inset:0;display:grid;place-items:center}
+    .spinner:after{content:'';width:44px;height:44px;border-radius:50%;border:4px solid rgba(255,255,255,0.08);border-top-color:rgba(255,255,255,0.28);animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    footer.hint{margin-top:18px;padding:14px;color:var(--muted);font-size:13px;border-top:1px solid rgba(255,255,255,0.02)}
+    .small{font-size:13px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="main">
+      <div class="left">
+        <div class="brand">
+          <div class="logo">P</div>
+          <div>
+            <div class="small">Static Showcase</div>
+            <strong class="small">Instant product view</strong>
+          </div>
+        </div>
+
+        <h1 id="title">Awesome Product Name</h1>
+        <p class="lead">A short, punchy one-line description that highlights the product's top benefit. Clean, simple, and perfect for a static page.</p>
+
+        <div class="price">₹ 1,999 <span class="small" style="font-weight:500;color:var(--muted);font-size:12px">(incl. taxes)</span></div>
+
+        <div class="buyrow">
+          <button class="btn primary" id="buyBtn">Buy now</button>
+          <button class="btn ghost" id="shareBtn">Share</button>
+        </div>
+
+        <div class="specs" aria-hidden>
+          <div class="spec">Fast delivery</div>
+          <div class="spec">1-year warranty</div>
+          <div class="spec">Secure payment</div>
+        </div>
+
+        <footer class="hint">To show your product: upload your image to <code>/images/product.jpg</code> in this repository and publish with GitHub Pages. The page will show the product immediately when opened.</footer>
+      </div>
+
+      <div class="right">
+        <div class="imgwrap" aria-hidden>
+          <div class="spinner" id="spinner"></div>
+          <!-- by default the page looks for /images/product.jpg -->
+          <img class="product" id="productImg" alt="Product image" data-src="/images/product.jpg" src="" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Basic script to lazy-load the image and show a spinner until loaded.
+    (function(){
+      const img = document.getElementById('productImg');
+      const spinner = document.getElementById('spinner');
+      const src = img.getAttribute('data-src') || '/images/product.jpg';
+      // Try to display the product right away.
+      function showImage(){
+        img.src = src;
+        img.onload = function(){
+          img.classList.add('loaded');
+          spinner.style.display = 'none';
+        };
+        img.onerror = function(){
+          spinner.style.display = 'none';
+          img.alt = 'Product image not found. Upload your image to /images/product.jpg or update the image path in index.html.';
+          img.style.opacity = 1;
+          img.style.transform = 'none';
+          img.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="720" height="480"><rect width="100%" height="100%" fill="%2309121a"/><text x="50%" y="50%" fill="%23b6c2d6" font-size="20" text-anchor="middle" dy="7">No product image found</text></svg>';
+        };
+      }
+      // When page loads, call showImage so the moment the user clicks the GitHub Pages link the image is displayed.
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', showImage); else showImage();
+
+      // Example interactions
+      document.getElementById('buyBtn').addEventListener('click', function(){
+        alert('This is a static demo page. Replace this with your payment link or cart integration.');
+      });
+      document.getElementById('shareBtn').addEventListener('click', function(){
+        try{navigator.share && navigator.share({title:document.title,url:location.href});}catch(e){navigator.clipboard && navigator.clipboard.writeText(location.href).then(()=>alert('Link copied to clipboard'))}
+      });
+    })();
+  </script>
+</body>
+</html>
